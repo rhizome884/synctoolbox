@@ -30,9 +30,9 @@ def get_initial_bpm(jam):
                 initial_bpm = bpm[2]
     return initial_bpm
 
-def put_note_data_in_list(jam):
+def put_note_data_in_list(jam, instrument):
     # initialise list with fieldnames 
-    note_data = [['start', 'duration', 'pitch', 'velocity']]
+    note_data = [['start', 'duration', 'pitch', 'velocity', 'instrument']]
     # get note_tab annotation
     ann = jam.search(namespace='note_tab')
     # add note data to list
@@ -47,7 +47,7 @@ def put_note_data_in_list(jam):
             bpm = get_initial_bpm(jam)
             onset_in_s = onset_ticks_to_seconds(time, bpm)
             dur_in_s = duration_ticks_to_seconds(dur, bpm)
-            note_data.append([onset_in_s, dur_in_s, pitch, velocity])
+            note_data.append([onset_in_s, dur_in_s, pitch, velocity, instrument])
     # return note data as list of lists
     return note_data
 
@@ -66,7 +66,8 @@ if __name__ == "__main__":
     jams.schema.add_namespace('note_tab.json')
     # load JAMS file
     jam = jams.load(filename + ".jams")
-    # put data that is to be time warped in list 
-    note_data = put_note_data_in_list(jam)
+    # put data that is to be time warped in list
+    instrument = 'guitar'
+    note_data = put_note_data_in_list(jam, instrument)
     # save the list as a csv file
     save_note_data_list_as_csv(note_data, filename)
