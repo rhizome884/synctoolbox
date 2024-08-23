@@ -1,5 +1,6 @@
 import jams
 import csv
+import sys
 
 def duration_ticks_to_seconds(ticks, bpm):
     # set pulses per second to match guitarpro 
@@ -61,7 +62,7 @@ def save_note_data_list_as_csv(note_data, filename):
 
 if __name__ == "__main__":
     # add filename for JAMS and CSV files
-    filename = 'm-carcassi_andantino'
+    filename = sys.argv[1]
     # add schema for synthtab JAMS
     jams.schema.add_namespace('note_tab.json')
     # load JAMS file
