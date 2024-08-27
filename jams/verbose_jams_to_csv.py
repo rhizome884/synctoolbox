@@ -62,7 +62,11 @@ def put_note_data_in_list(jam, instrument):
             effects = None
             if 'effects' in note[2]:
                 effects = note[2]['effects']
-                print('Effect onset at', onset_in_s)
+                for effect in effects:
+                    fx_time = onset_ticks_to_seconds(effect['time'], bpm)
+                    effect['time'] = fx_time
+                    fx_dur = duration_ticks_to_seconds(effect['duration'], bpm)
+                    effect['duration'] = fx_dur
             # Append note data to list
             note_data.append([onset_in_s, dur_in_s, pitch, velocity, instrument,
                               fret, string_index, open_tuning, effects])
@@ -75,7 +79,7 @@ def save_note_data_list_as_csv(note_data, filename):
         writer = csv.writer(f, delimiter=';')
         for row in note_data:
             writer.writerow(row)
-    print(f"Note data written to {filename}.csv")
+    print(f"JAMS data written to {filename}.csv")
 
 if __name__ == "__main__":
     # add filename for JAMS and CSV files
