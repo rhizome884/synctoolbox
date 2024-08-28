@@ -1,5 +1,6 @@
 import jams
 import librosa
+import csv
 
 """
 Create a function and script that converts time warped symbolic music data
@@ -28,9 +29,21 @@ def csv_to_jams(incsv, inwav, outjams):
 
     # Add metadata to annotation (JUST USE EXAMPLE METADATA ANNOTATION FOR NOW)
     note_tab.annotation_metadata = jams.AnnotationMetadata(data_source='human and synctoolbox')
+    # POSSIBLE ISSUE - string data bundled together!!!
+    # Open and read csv file
+    with open(incsv, 'r') as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        next(reader)
+        for row in reader: 
+            # Dictionary of tablature note attributes
+            value = {'fret': row[5], 'velocity': row[3]}
+            # Add any note effects to the dictionary
+            if row[8] != 'nan':
+                value.update({'effects': row[8]})
 
-    print(jam)
-
+            # Add an annotation for the note
+            note_tab
+                
 if __name__ == "__main__":
 
     # Create arguments to pass to csv_to_jams
