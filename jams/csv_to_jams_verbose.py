@@ -46,8 +46,8 @@ def csv_to_jams(incsv, inwav, outjams):
         # Loop through the note data
         for row in reader:
             # Create guitar string variables
-            string_num = row[6]
-            string_tuning = row[7]
+            string_num = int(row[6])
+            string_tuning = int(row[7])
             # Check whether a new string annotation is needed
             if string_log != string_num:
                 # Add previous guitar string data to JAMS annotations 
@@ -76,16 +76,20 @@ def csv_to_jams(incsv, inwav, outjams):
 
         # Add final guitar string data to JAMS annotations
         jam.annotations.append(string_data)
-
+    
+    # Save the JAMS object
     jam.save(outjams)
+    
+    # Print the name of the saved JAMS file
     print(f"CSV data saved to {outjams}")
+
+    # Should I add tempo data?
     # Add metadata to annotation (JUST USE EXAMPLE METADATA ANNOTATION FOR NOW)
     #note_tab.annotation_metadata = jams.AnnotationMetadata(data_source='human and synctoolbox')
-    # POSSIBLE ISSUE - string data bundled together!!!
                 
 if __name__ == "__main__":
 
-    # Create arguments to pass to csv_to_jams
+    # Create arguments to pass to csv_to_jams function
     incsv = "tarrega_adelita_v2_dtw.csv"
     inwav = "Adelita_FranciscoTarrega_ArmandoFerreira.wav"
     outjams = "test-verbose.jams"
