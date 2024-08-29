@@ -35,27 +35,39 @@ def csv_to_jams(incsv, inwav, outjams):
     # Store the track duration
     jam.file_metadata.duration = track_duration
 
-    # Construct annotation record
-    for i in range(1,7):
-        print(i)
-    note_tab = jams.Annotation(namespace='note_tab')
-
-    # Add metadata to annotation (JUST USE EXAMPLE METADATA ANNOTATION FOR NOW)
-    note_tab.annotation_metadata = jams.AnnotationMetadata(data_source='human and synctoolbox')
-    # POSSIBLE ISSUE - string data bundled together!!!
     # Open and read csv file
     with open(incsv, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         next(reader)
-        for row in reader: 
+        string_log = 0
+        for row in reader:
+            # Create guitar string variables
+            string_num = row[6]
+            string_tuning = row[7]
+            if string_log != string_num:
+                print(string_log)
+                if string_log != 0:
+                    jam.annotations.append(string_data)
+                # Create a new annotation for the guitar string
+                string_data = jams.Annotation(namespace='note_tab')
+                string_data.sandbox.update(string_index=string_num, open_tuning=string_tuning) 
+                string_log = string_num
+            
             # Dictionary of tablature note attributes
-            value = {'fret': row[5], 'velocity': row[3]}
+            value = {'fret': int(row[5]), 'velocity': int(row[3])}
             # Add any note effects to the dictionary
             if row[8] != 'nan':
-                value.update({'effects': row[8]})
+                 value.update({'effects': row[8]})
 
             # Add an annotation for the note
-            note_tab
+            string_data.append(time=row[0], duration=row[1], value=value)
+        # Append data for the final guitar string 
+        jam.annotations.append(string_data)
+
+    jam.save(outjams)
+    # Add metadata to annotation (JUST USE EXAMPLE METADATA ANNOTATION FOR NOW)
+    #note_tab.annotation_metadata = jams.AnnotationMetadata(data_source='human and synctoolbox')
+    # POSSIBLE ISSUE - string data bundled together!!!
                 
 if __name__ == "__main__":
 
