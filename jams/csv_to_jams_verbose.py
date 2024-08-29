@@ -65,6 +65,10 @@ def csv_to_jams(incsv, inwav, outjams):
             if row[8] != 'nan':
                 # Convert string representation of list to a list 
                 effects_list = ast.literal_eval(row[8])
+                # Update the effect 'time' and 'duration' values so they match DTW values 
+                for effect in effects_list:
+                    effect['time'] = float(row[0])
+                    effect['duration'] = float(row[1])
                 # Add any effects to the dictionary of note attributes
                 value.update({'effects': effects_list})
             # Add an annotation for the note
